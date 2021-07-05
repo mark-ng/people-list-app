@@ -28,9 +28,8 @@ function FriendListPage({ friendList }: { friendList: Friend[] }) {
         {friendList.map((friendData) => {
           let fullName = `${friendData.name.last} ${friendData.name.first}`;
           return (
-            <Paper>
+            <Paper key={friendData._id}>
               <ListItem
-                key={friendData._id}
                 button
                 onClick={() => {
                   history.push(`/${friendData._id}`);
