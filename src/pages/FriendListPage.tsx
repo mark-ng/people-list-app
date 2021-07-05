@@ -1,64 +1,51 @@
 import {
   Avatar,
+  Box,
   ListItem,
   ListItemAvatar,
   ListItemText,
+  Paper,
   Typography,
 } from "@material-ui/core";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { useHistory } from "react-router-dom";
-import LinearLoading from "../components/LinearLoading";
 import { Friend } from "../models/Friend";
+import generalStyles from "../styles/generalStyles";
 
-const { REACT_APP_FREIND_LIST_API_URL, REACT_APP_FREIND_LIST_API_KEY } =
-  process.env;
-
-function FriendListPage() {
-  const [allFriends, setAllFriends] = useState<Friend[]>([]);
+function FriendListPage({ friendList }: { friendList: Friend[] }) {
   const history = useHistory();
-  const [loading, setLoading] = useState(true);
+  const classes = generalStyles();
 
-  useEffect(() => {
-    async function fetchAllFriends() {
-      let res = await fetch(
-        `${REACT_APP_FREIND_LIST_API_URL}/templates/Xp8zvwDP14dJ/data`,
-        {
-          headers: {
-            Authorization: `Bearer ${REACT_APP_FREIND_LIST_API_KEY}`,
-          },
-        }
-      );
-      let resJson = await res.json();
-      setAllFriends(resJson);
-      setLoading(false);
-    }
-    fetchAllFriends();
-  }, []);
-
-  return loading ? (
-    <LinearLoading word={true} color={"white"} />
-  ) : (
+  return (
     <>
-      <Typography variant="h5" component="h1" style={{ textAlign: "center" }}>
-        All Friends
-      </Typography>
-      {allFriends.map((friendData) => {
-        let fullName = `${friendData.name.last} ${friendData.name.first}`;
-        return (
-          <ListItem
-            key={friendData._id}
-            button
-            onClick={() => {
-              history.push(`/${friendData._id}`);
-            }}
-          >
-            <ListItemAvatar>
-              <Avatar alt={fullName} src={friendData.picture} />
-            </ListItemAvatar>
-            <ListItemText primary={fullName} />
-          </ListItem>
-        );
-      })}
+      <Box className={classes.headerBox}>
+        <Typography variant="h5" component="h1" style={{ textAlign: "center" }}>
+          All Friends
+        </Typography>
+      </Box>
+
+      <Box style={{ backgroundColor: "#efefef", padding: "2px" }}>
+        {friendList.map((friendData) => {
+          let fullName = `${friendData.name.last} ${friendData.name.first}`;
+          return (
+            <Paper>
+              <ListItem
+                key={friendData._id}
+                button
+                onClick={() => {
+                  history.push(`/${friendData._id}`);
+                }}
+                style={{ margin: "5px" }}
+              >
+                <ListItemAvatar>
+                  <Avatar alt={fullName} src={friendData.picture} />
+                </ListItemAvatar>
+                <ListItemText primary={fullName} />
+              </ListItem>
+            </Paper>
+          );
+        })}
+      </Box>
     </>
   );
 }
